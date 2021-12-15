@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "version-mod-loader",
+  "version": "${version}",
+  "name": "Version Mod Loader",
+  "description": "Convinces Fabric Loader to load mods in aptly named subdirectories",
+  "authors": [
+    "sschr15"
+  ],
+  "contact": {
+    "website": "github.com/sschr15/Version-Mod-Loader",
+    "repo": "github.com/sschr15/Version-Mod-Loader"
+  },
+  "license": "MIT",
+  "icon": "assets/version-mod-loader/icon.png",
+  "environment": "*",
+  "entrypoints": {},
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "*"
+  },
+  "languageAdapters": {
+    "version-mod-loader:fakeAdapterToLoadReallyEarly": "sschr15.fabricmods.tools.versionmodloader.VersionModLoader"
+  }
+}
