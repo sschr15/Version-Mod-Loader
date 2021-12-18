@@ -80,6 +80,22 @@ public class VersionModLoader implements LanguageAdapter {
             }
             String[] fabricReportedArgs = FabricLoader.getInstance().getLaunchArguments(false);
 
+            // fix for funky mclauncher stuff
+            if (vmArgs.contains("-Dos.name=")) {
+                String beforeOsName = vmArgs.substring(0, vmArgs.indexOf("-Dos.name="));
+                String afterXss = vmArgs.substring(vmArgs.indexOf("-Xss"));
+                afterXss = afterXss.substring(afterXss.indexOf(' ') + 1); // skip the value and the space
+                vmArgs = beforeOsName + afterXss;
+
+                // fix weird space thing which convinces java it's done parsing vm args
+                if (vmArgs.contains("-DFabricMcEmu= ")) {
+                    vmArgs = vmArgs.replace("-DFabricMcEmu= ", "-DFabricMcEmu=");
+                }
+            }
+
+            // fix for extra spaces
+            vmArgs = vmArgs.replaceAll("\\s+", " ");
+
             List<String> entireCommand = new ArrayList<>();
             entireCommand.add(java);
             entireCommand.addAll(Arrays.asList(vmArgs.split(" ")));
@@ -89,6 +105,10 @@ public class VersionModLoader implements LanguageAdapter {
             entireCommand.add(MainVML.class.getName()); // init with our own Main
             entireCommand.add(command); // then pass the original command on
             entireCommand.addAll(Arrays.asList(fabricReportedArgs)); // along with the original args
+
+            if (System.getProperty("debug") != null) {
+                LOGGER.info("Launching with command: " + String.join(" ", entireCommand));
+            }
 
             Process process = new ProcessBuilder(entireCommand)
                     .inheritIO()
